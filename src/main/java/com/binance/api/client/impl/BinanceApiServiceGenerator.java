@@ -2,12 +2,10 @@ package com.binance.api.client.impl;
 
 import com.binance.api.client.BinanceApiError;
 import com.binance.api.client.config.BinanceApiConfig;
-import com.binance.api.client.constant.BinanceApiConstants;
 import com.binance.api.client.exception.BinanceApiException;
 import com.binance.api.client.security.AuthenticationInterceptor;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import org.apache.commons.lang3.StringUtils;
 import retrofit2.Call;
@@ -47,9 +45,26 @@ public class BinanceApiServiceGenerator {
         return createService(serviceClass, null, null);
     }
 
+    /**
+     * Create a Binance API service.
+     *
+     * @param serviceClass the type of service.
+     * @param apiKey Binance API key.
+     * @param secret Binance secret.
+     *
+     * @return a new implementation of the API endpoints for the Binance API service.
+     */
     public static <S> S createService(Class<S> serviceClass, String apiKey, String secret) {
+        String baseUrl = null;
+        if (!BinanceApiConfig.useTestnet) { baseUrl = BinanceApiConfig.getApiBaseUrl(); }
+        else {
+            baseUrl = /*BinanceApiConfig.useTestnetStreaming ?
+                BinanceApiConfig.getStreamTestNetBaseUrl() :*/
+                BinanceApiConfig.getTestNetBaseUrl();
+        }
+
         Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
-                .baseUrl(BinanceApiConfig.getApiBaseUrl())
+                .baseUrl(baseUrl)
                 .addConverterFactory(converterFactory);
 
         if (StringUtils.isEmpty(apiKey) || StringUtils.isEmpty(secret)) {
