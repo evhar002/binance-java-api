@@ -28,7 +28,7 @@ public class MarginUserDataStreamExample {
 
     // Listen for changes in the account
     webSocketClient.onUserDataUpdateEvent(listenKey, response -> {
-      if (response.getEventType() == UserDataUpdateEventType.ACCOUNT_UPDATE) {
+      if (response.getEventType() == UserDataUpdateEventType.ACCOUNT_POSITION_UPDATE) {
         AccountUpdateEvent accountUpdateEvent = response.getAccountUpdateEvent();
         // Print new balances of every available asset
         System.out.println(accountUpdateEvent.getBalances());
